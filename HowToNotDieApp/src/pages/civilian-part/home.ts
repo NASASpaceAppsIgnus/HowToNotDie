@@ -434,4 +434,27 @@ export class CivilianPartPage {
         //console.log((window.screen.height - 56 - 2*36) + "px");
         return (window.screen.height - 56 - 2*36) + "px";
     }
+
+    /*alertRescueTeam() : void {
+        var message = {};
+        this.sendMessage("{'type': }request for help");
+    }*/
+
+    turnDangerOnOff() : void {
+        this.danger = !this.danger;
+        //while(this.mapContainer.offsetHeight < 100) {
+         setTimeout(() => {console.log(this.mapContainer.offsetHeight); this.displayMap({}, true);}, 1);
+        //}
+    }
+
+    turnRunOnOff() : void {
+        this.run = !this.run;
+        //while(this.mapContainer.offsetHeight < 100) {
+         setTimeout(() => {console.log(this.mapContainer.offsetHeight); this.displayMap({}, true);}, 1);
+        //}
+    }
+
+    /*reportFire() : void {
+        this.sendMessage("report fire");
+    }*/
 }
