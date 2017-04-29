@@ -3,8 +3,8 @@ import { NavController, NavParams } from 'ionic-angular';
 import { CivilianPartPage } from '../civilian-part/home';
 
 @Component({
-  selector: 'page-hello-ionic',
-  templateUrl: 'hello-ionic.html'
+  selector: 'welcome-page',
+  templateUrl: 'welcome.html'
 })
 export class WelcomePage {
     public danger:boolean = false;
