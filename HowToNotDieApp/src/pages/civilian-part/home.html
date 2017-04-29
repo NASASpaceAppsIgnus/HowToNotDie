@@ -1,0 +1,42 @@
+<!--<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Pages</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button ion-item *ngFor="let p of pages" (click)="displayInformation(p)">
+        {{p.title}}
+      </button>
+    </ion-list>
+  </ion-content>
+
+</ion-menu>-->
+
+<ion-content>
+    <ion-header>
+      <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Welcome, we are here to help you not die =)</ion-title>
+      </ion-navbar>
+    </ion-header>
+
+    <ion-content>
+        <button ion-button full (click)="turnDangerOnOff()">Turn danger <span *ngIf="danger"> off</span><span *ngIf="!danger">on</span></button>
+        <button ion-button full (click)="turnRunOnOff()">Turn run <span *ngIf="run"> off</span><span *ngIf="!run"> on</span></button>
+        <!--<button ion-button full (click)="reportFire()">Report a fire</button>-->
+        <div *ngIf="!danger">
+            <p>No registered danger yet</p>
+            <p>Just wait for fire ;)</p>
+        </div>
+        <div [style.display]="danger ? 'block' : 'none'">
+            <!--<button ion-button full (click)="alertRescueTeam()" color="danger" >HELP ME</button>-->
+            <div id="map" [style.display]="run ? 'block' : 'none'" [style.height]="getAvailableHeight()" style="width: 100%; min-heigth: 100px;">
+            </div>
+            <p *ngIf="!run">Stay there, relevant information can be found <a href="myawesomewebsite.com.au">here</a></p>
+        </div>
+    </ion-content>
+</ion-content>
