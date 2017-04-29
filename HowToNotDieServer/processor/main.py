@@ -9,6 +9,8 @@ class Processor:
         try:
             command = inputData["command"]
             if command == "pushAlert":
+                position = [30, 40]
+                ActiveClients.UpdateClient(clientID, "$set", {ActiveClients.POSITION:position, ActiveClients.CLIENT_STATE:clientState})                
                 Alerts.PushAlert(clientID, Alerts.DANGER_LEVEL_ESCAPE)
                 return {Alerts.DANGER_LEVEL:Alerts.DANGER_LEVEL_ESCAPE}
             clientState = COMMANDS[command]
@@ -19,8 +21,8 @@ class Processor:
             return None
         position = [lat, lng]
         ActiveClients.UpdateClient(clientID, "$set", {ActiveClients.POSITION:position, ActiveClients.CLIENT_STATE:clientState})
-        dangerLevel = Areas.GetDangerLevel(position)
-        outputData = {Alerts.DANGER_LEVEL:client[Alerts.DANGER_LEVEL]}
+        #TODO save danger level inside client record
+        outputData = {Alerts.DANGER_LEVEL:Alerts.DANGER_LEVEL_NODANGER}
         Areas.Load(client[ActiveClients.POSITION], outputData)
         return outputData
         
