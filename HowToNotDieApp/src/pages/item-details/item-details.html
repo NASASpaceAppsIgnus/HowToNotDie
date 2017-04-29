@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <button menuToggle *ngIf="!selectedItem">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ selectedItem.title }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <h3 text-center *ngIf="selectedItem">
+    {{selectedItem.title}}
+  </h3>
+  <div style="text-align: center;">
+      <img [src]="selectedItem.image"/>
+  </div>
+  <h4 text-center *ngIf="selectedItem">
+    {{selectedItem.text}}
+  </h4>
+</ion-content>
