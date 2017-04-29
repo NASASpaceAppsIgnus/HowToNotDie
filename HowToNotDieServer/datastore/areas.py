@@ -6,6 +6,8 @@ class Areas:
     DISPLAY_POLY = "displayPoly"
     DEFAULT_POSITION_RANGE_IN_DEG = 0.05
     
+    PREDEFINED_SAFE_ZONES=((30, 30), (40, 40), (50, 50))
+    
     def AddAreaToAvoid(leftTopPoint, rightBottomPoint, risk):
         cellsMin = GetCellIDs(leftTopPoint, 0)
         cellsMax = GetCellIDs(leftTopPoint, 0)
@@ -31,13 +33,39 @@ class Areas:
 
         except Exception as e:
             print("Failed to add area to avoid: %s, error: %s" % (boundary, e)) 
-            
+      
+    #TODO
     #def RemoveAreaToAvoid():
+     
+    def AddAreaToAvoid(leftTopPoint, rightBottomPoint, risk):
+        cellsMin = GetCellIDs(leftTopPoint, 0)
+        cellsMax = GetCellIDs(leftTopPoint, 0)
+        areaID = "ATA" + cellsMin[0] + cellsMax[0]
+        boundary = [leftTopPoint[0], leftTopPoint[1], rightBottomPoint[0], rightBottomPoint[1]]
+        try:
+            GetDB().Areas.delete_one({"areaID":areaID})
+        except:
+            pass
         
+        try: 
+            GetDB().Areas.insert_one({"areaID":areaID, "type":Areas.AREA_TO_AVOID, "data":{"boundary":boundary,"risk":risk}})
+            cellIDs = GetCellIDsWithBoundary(boundary)
+            for cellID in cellIDs:
+                cell = GetDB().Cells.find_one({"cellID":cellID})
+                if cell:
+                    if areaID not in cell["areas"]:
+                        cell["areas"].append({"areaID":areaID})
+                        GetDB().Cells.update_one({"cellID":cellID}, {"$set":{"areas":cell["areas"]}})
+                else:
+                    GetDB().Cells.insert_one({"cellID":cellID, "type":Areas.AREA_TO_AVOID, "data":{"boundary":boundary,"risk":risk}})
+                GetDB().Cells.insert_one({"cellID":cellID, "areas":[areaID]})
+
+        except Exception as e:
+            print("Failed to add area to avoid: %s, error: %s" % (boundary, e))     
     
     def Load(position, data):
         data[Areas.AREA_TO_AVOID]=[]
-        data[Areas.SAFE_ZONES]=[]
+        data[Areas.SAFE_ZONES]=Areas.PREDEFINED_SAFE_ZONES
         data[Areas.DISPLAY_POLY]=[]
         
         try: 
