@@ -428,4 +428,10 @@ export class CivilianPartPage {
             }
         }
     }
+
+    getAvailableHeight() {
+        //console.log("getAvailableHeigth: " + window.screen.height);
+        //console.log((window.screen.height - 56 - 2*36) + "px");
+        return (window.screen.height - 56 - 2*36) + "px";
+    }
 }
