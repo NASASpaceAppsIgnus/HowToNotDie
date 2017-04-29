@@ -13,16 +13,16 @@ class Processor:
                 ActiveClients.UpdateClient(clientID, "$set", {ActiveClients.POSITION:position, ActiveClients.CLIENT_STATE:clientState})                
                 Alerts.PushAlert(clientID, Alerts.DANGER_LEVEL_ESCAPE)
                 return {Alerts.DANGER_LEVEL:Alerts.DANGER_LEVEL_ESCAPE}
-            clientState = COMMANDS[command]
-            lat = float(inputData["lat"])
-            lng = float(inputData["lng"])
+            clientState = Processor.COMMANDS[command]
+            lat = float(inputData["data"]["lat"])
+            lng = float(inputData["data"]["lng"])
         except Exception as e:
             print("Failed to process client %s message: %s, error: %s" % (clientID, inputData, e)) 
             return None
         position = [lat, lng]
-        ActiveClients.UpdateClient(clientID, "$set", {ActiveClients.POSITION:position, ActiveClients.CLIENT_STATE:clientState})
-        #TODO save danger level inside client record
-        outputData = {Alerts.DANGER_LEVEL:Alerts.DANGER_LEVEL_NODANGER}
+        ActiveClients.UpdateClient(clientID, "$set", {ActiveClients.POSITION:position, ActiveClients.CLIENT_STATE:clientState, Alerts.DANGER_LEVEL:Alerts.DANGER_LEVEL_NODANGER})
+        client = ActiveClients.FindClient(clientID)
+        outputData = {Alerts.DANGER_LEVEL:client[Alerts.DANGER_LEVEL]}
         Areas.Load(client[ActiveClients.POSITION], outputData)
         return outputData
         

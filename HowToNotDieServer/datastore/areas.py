@@ -20,7 +20,7 @@ class Areas:
         
         try: 
             GetDB().Areas.insert_one({"areaID":areaID, "type":Areas.AREA_TO_AVOID, "data":{"boundary":boundary,"risk":risk}})
-            cellIDs = GetCellIDsWithBoundary(boundary)
+            cellIDs = Areas.GetCellIDsWithBoundary(boundary)
             for cellID in cellIDs:
                 cell = GetDB().Cells.find_one({"cellID":cellID})
                 if cell:
@@ -108,14 +108,14 @@ class Areas:
         latMax = lat + range
         lngMax = lng + range
         boundary = [latMin, lngMin, latMax, lngMax]
-        return GetCellIDsWithBoundary(boundary)
+        return Areas.GetCellIDsWithBoundary(boundary)
     
     def GetCellIDsWithBoundary(boundary):
         result = []
-        nlatMin = NormLat(boundary[0])
-        nlngMin = NormLng(boundary[1])
-        nlatMax = NormLat(boundary[2])
-        nlngMax = NormLng(boundary[3])
+        nlatMin = Areas.NormLat(boundary[0])
+        nlngMin = Areas.NormLng(boundary[1])
+        nlatMax = Areas.NormLat(boundary[2])
+        nlngMax = Areas.NormLng(boundary[3])
         for i in range(nlatMin, nlatMax):
             for j in range(nlngMin, nlngMax):
                 result.append(str(i) + str(j))
