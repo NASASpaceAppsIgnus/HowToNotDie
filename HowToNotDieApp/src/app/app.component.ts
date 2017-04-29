@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 
 import { Platform, MenuController, Nav } from 'ionic-angular';
 
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
+import { WelcomePage } from '../pages/welcome/welcome';
 import { ItemDetailsPage } from '../pages/item-details/item-details';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -16,7 +16,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage = HelloIonicPage;
+  rootPage = WelcomePage;
   pages : any = [];
 
   constructor(
@@ -27,7 +27,7 @@ export class MyApp {
   ) {
     this.initializeApp();
 
-    this.pages.push({"title": "Home", "component": HelloIonicPage});
+    this.pages.push({"title": "Home", "component": WelcomePage});
     this.pages.push({"title": "Kitten", "image": "http://25.media.tumblr.com/d9e668fac828170fd3043f063f3fc4c4/tumblr_mm9n3sdycy1ry1y7qo5_500.gif", "text": "This is a normal kitten", "component": ItemDetailsPage});
     this.pages.push({"title": "Evil kitten", "image": "http://img.memecdn.com/evil-cat_o_762275.gif", "text": "This is an evil kitten", "component": ItemDetailsPage});
     console.log(this.pages);

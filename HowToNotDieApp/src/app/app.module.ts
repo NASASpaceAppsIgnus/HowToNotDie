@@ -5,7 +5,7 @@ import { MyApp } from './app.component';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { Geolocation } from '@ionic-native/geolocation';
 
-import { HelloIonicPage } from '../pages/hello-ionic/hello-ionic';
+import { WelcomePage } from '../pages/welcome/welcome';
 import { CivilianPartPage } from '../pages/civilian-part/home';
 
 import { ItemDetailsPage } from '../pages/item-details/item-details';
@@ -17,7 +17,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 @NgModule({
   declarations: [
     MyApp,
-    HelloIonicPage,
+    WelcomePage,
     ItemDetailsPage,
     CivilianPartPage,
     MapPage
@@ -29,7 +29,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HelloIonicPage,
+    WelcomePage,
     ItemDetailsPage,
     CivilianPartPage,
     MapPage
