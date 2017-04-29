@@ -30,7 +30,20 @@ export class CivilianPartPage {
     currentLocation: any;
     canMove: boolean;
 
-
+    sendMessage(text: String): void {
+        console.log("sending : " + text);
+        this.ws.send(text).subscribe(
+            (msg)=> {
+                console.log("next", msg.data);
+            },
+            (msg)=> {
+                console.log("error", msg);
+            },
+            ()=> {
+                console.log("complete");
+            }
+        );
+    }
 
     constructor(public navCtrl: NavController, private elRef: ElementRef, private backgroundMode: BackgroundMode, private geolocation: Geolocation, public navParams: NavParams) {
         console.log("arrived on civilian-part");
@@ -222,6 +235,55 @@ export class CivilianPartPage {
                 '<div style="position: initial;"><div style="display: inline-block; min-width: 100px; position: absolute; transform: translate(-50%, -100%) translate(0px, -30px); overflow: auto; max-height: 337px; max-width: 500px;background-color: white;border-radius: 5px;box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.6);"><ol style="padding: 5px;margin: auto; border-radius: 5px;"><div>' + content + '</div></ol></div><div style="position: absolute; overflow: hidden; width: 16px; height: 30px;transform: translate(-60%, -100%);"><div style="position: absolute; background-color: rgb(255, 255, 255); transform: skewX(22.6deg); transform-origin: 0px 0px 0px; height: 24px; width: 10px; box-shadow: 0px 1px 0px inherit 6px rgba(0, 0, 0, 0.6);z-index: 1;"></div></div><div style="position: absolute; overflow: hidden; width: 16px; height: 30px;z-index: 1;transform: translate(5%, -100%);"><div style="background-color: rgb(255, 255, 255); transform: skewX(-22.6deg); transform-origin: 10px 0px 0px; height: 24px; width: 10px;"></div></div></div>');
             app.placeMarkers();
         }
+
+        /* websocket communication */
+        this.ws = new $WebSocket("ws://" + this.pathForWebSockets);
+        this.ws.getDataStream().subscribe(
+            res => {},
+            function(x){
+                return function(e) {
+                        console.log('connection error: ' + e.message);
+                        x.connect();}
+                    }(this.ws),
+            function(x){
+                return function() {
+                    console.log('connection completed');
+                    x.connect();}
+                }(this.ws)
+        );
+        this.ws.onMessage((msg: MessageEvent)=> {
+                console.log("onMessage ", msg.data);
+                //define what to do with that
+                this.handleServerMessages(msg.data);
+            },
+            {autoApply: false}
+        );
+
+        this.backgroundMode.enable();
+
+        this.geolocation.getCurrentPosition().then((resp) => {
+                console.log(resp.coords.latitude + ":" + resp.coords.longitude);
+                this.sendMessage(resp.coords.latitude + ":" + resp.coords.longitude);
+            }).catch((error) => {
+              console.log('Error getting location', error);
+          });
+
+        this.canMove = navParams.data.canMove;
+
+        let watch = this.geolocation.watchPosition();
+        watch.subscribe((data) => {
+            //console.log(data);
+            if(data.coords && data.coords != this.currentLocation) {
+                this.currentLocation = data.coords;
+                var message = {"command":"geo", "data": {"lat": data.coords.latitude, "lng": data.coords.longitude}};
+                this.sendMessage(JSON.stringify(message));
+            }
+            else {
+                console.log("error checking geolocation");
+                console.log(data);
+                //this.sendMessage(data);
+            }
+        });
     }
 
     error(error) {
@@ -327,16 +389,16 @@ export class CivilianPartPage {
 
         var liste = [
             -33.6951609555 , 150.495160956,
-    -33.6951609555 , 150.504839044,
-    -33.7120976112 , 150.545970922,
-    -33.7241952223 , 150.553229489,
-    -33.7338733112 , 150.553229489,
-    -33.7483904446 , 150.548390445,
-    -33.7532294891 , 150.533873311,
-    -33.7532294891 , 150.524195222,
-    -33.7459709224 , 150.512097611,
-    -33.7048390445 , 150.495160956,
-    -33.6951609555 , 150.495160956];
+            -33.6951609555 , 150.504839044,
+            -33.7120976112 , 150.545970922,
+            -33.7241952223 , 150.553229489,
+            -33.7338733112 , 150.553229489,
+            -33.7483904446 , 150.548390445,
+            -33.7532294891 , 150.533873311,
+            -33.7532294891 , 150.524195222,
+            -33.7459709224 , 150.512097611,
+            -33.7048390445 , 150.495160956,
+            -33.6951609555 , 150.495160956];
         this.map.addPolygonFromList(liste, colors[2] + "BB");
         this.map.addPolygonFromList([-33.6951609555, 150.553229489, -33.6951609555 ,150.495160956, -33.7532294891, 150.495160956,-33.7532294891, 150.553229489], "#00000000", 2, "#000");
 
@@ -344,4 +406,26 @@ export class CivilianPartPage {
         //this.map.setCenter({"lat":-33.6527334665 , "lng": 150.530349492});
     }
 
+    handleServerMessages(messageContent) : void {
+        console.log("handling server messages");
+        var response = JSON.parse(messageContent);
+        if(messageContent.type == "alert") {
+            switch(response.data.dangerLevel) {
+                case "hold":
+                    this.danger = true;
+                    this.run = false;
+                    break;
+                case "escape":
+                    this.danger = true;
+                    this.run = true;
+                    break;
+                default:
+                    this.danger = false;
+                    this.run = false;
+            }
+            if (this.danger && this.run) {
+                setTimeout(() => {this.displayMap(response.data);}, 1);
+            }
+        }
+    }
 }
