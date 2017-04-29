@@ -263,7 +263,8 @@ export class CivilianPartPage {
 
         this.geolocation.getCurrentPosition().then((resp) => {
                 console.log(resp.coords.latitude + ":" + resp.coords.longitude);
-                this.sendMessage(resp.coords.latitude + ":" + resp.coords.longitude);
+                var message = {"command":"geo", "data": {"lat": resp.coords.latitude, "lng": resp.coords.longitude}};
+                this.sendMessage(JSON.stringify(message));
             }).catch((error) => {
               console.log('Error getting location', error);
           });
