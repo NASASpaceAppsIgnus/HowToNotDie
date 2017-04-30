@@ -28,7 +28,8 @@
         <button ion-button full (click)="turnDangerOnOff()">Turn danger <span *ngIf="danger"> off</span><span *ngIf="!danger">on</span></button>
         <button ion-button full (click)="turnRunOnOff()">Turn run <span *ngIf="run"> off</span><span *ngIf="!run"> on</span></button>
         <!--<button ion-button full (click)="reportFire()">Report a fire</button>-->
-        <div *ngIf="!danger">
+        <button ion-button full (click)="beginNavigation(true)">Begin navigation</button>
+        <div *ngIf="!danger" style="font-size: 22px;">
             <p>No registered danger yet</p>
             <p>Just wait for fire ;)</p>
         </div>

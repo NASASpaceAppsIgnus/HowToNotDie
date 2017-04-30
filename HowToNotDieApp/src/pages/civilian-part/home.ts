@@ -32,6 +32,10 @@ export class CivilianPartPage {
     public run: boolean = true;
     currentLocation: any;
     canMove: boolean;
+    id: number = 0;
+    navigating: boolean = false;
+    routeShape: any;
+    currentMarker: any;
 
     sendMessage(text: String): void {
         console.log("sending : " + text);
@@ -142,6 +146,8 @@ export class CivilianPartPage {
                 this.setViewBounds(H.geo.Rect.coverRects(this.bounds));
             }
         }
+
+        let map = this;
 
         /**
          * Creates a H.map.Polyline from the shape of the route and adds it to the map.
@@ -481,4 +487,40 @@ export class CivilianPartPage {
     /*reportFire() : void {
         this.sendMessage("report fire");
     }*/
+
+    beginNavigation(testing: boolean = false) {
+        this.navigating = true;
+        console.log("beginNavigation");
+        console.log(this.map);
+        this.map.setZoom(15);
+        //if(!this.currentLocation) {
+            console.log(this.currentLocation);
+            this.currentLocation = new H.geo.Point(-33, 150);
+        //}
+        console.log(this.currentLocation);
+        this.map.setCenter(this.currentLocation);
+        this.currentMarker = new H.map.Marker(this.currentLocation);
+        this.map.addObject(this.currentMarker);
+        if(testing) {
+            setTimeout(() => {this.moveOnRoad(0)}, 100);
+        }
+    }
+
+    moveOnRoad(currentStep) {
+        //console.log(currentStep);
+        //console.log(this.routeShape.getStrip());
+        //console.log(this.routeShape.getStrip().getLatLngAltArray())
+        var pos = this.routeShape.getStrip().getLatLngAltArray();
+        this.currentLocation = new H.geo.Point(pos[currentStep], pos[currentStep+1]);
+        this.updateNavigation();
+        setTimeout(()=>{currentStep += 3; this.moveOnRoad(currentStep);}, 100);
+    }
+
+    updateNavigation() {
+        //console.log(this.currentLocation);
+        this.currentMarker.setPosition(this.currentLocation);
+        console.log(this.currentMarker);
+        console.log(this.currentMarker.getVisibility());
+        this.map.setCenter(this.currentLocation);
+    }
 }
