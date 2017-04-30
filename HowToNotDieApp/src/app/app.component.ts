@@ -38,6 +38,12 @@ export class MyApp {
     this.pages.push({"title": "Kitten", "image": "http://25.media.tumblr.com/d9e668fac828170fd3043f063f3fc4c4/tumblr_mm9n3sdycy1ry1y7qo5_500.gif", "text": "This is a normal kitten", "component": ItemDetailsPage});
     this.pages.push({"title": "Evil kitten", "image": "http://img.memecdn.com/evil-cat_o_762275.gif", "text": "This is an evil kitten", "component": ItemDetailsPage});
     console.log(this.pages);
+
+    /*while(!this.localNotifications.hasPermission()) {
+        if (!this.localNotifications.registerPermission()) {
+            alert("We need to be able to warn from near fires !");
+        }
+    }*/
   }
 
   initializeApp() {

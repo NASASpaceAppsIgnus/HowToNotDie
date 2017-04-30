@@ -117,7 +117,7 @@ export class CivilianPartPage {
             /*for(var i=0; i < waypoints.length; i++) {
                 addWaypoint(routeRequestParams, waypoints[i], i, true, i == 0 ? null : i == waypoints.length - 1 ? null : "passThrough");
             }*/
-            this.currentLocation = {"lat": -33.883033, "lng": 151.200494};//-33.958497, 151.242690
+            this.currentLocation = {"lat": -33.733613, "lng": 150.478862};//-33.958497, 151.242690
             //console.log(this.currentLocation);
             //console.log("addWaypoint");
             addWaypoint(routeRequestParams, this.currentLocation, 0, true, "stopOver");
@@ -299,7 +299,10 @@ export class CivilianPartPage {
         watch.subscribe((data) => {
             //console.log(data);
             if(data.coords && data.coords != this.currentLocation) {
-                this.currentLocation = data.coords;
+                //this.currentLocation = data.coords;
+                /*if(this.navigating) {
+                    this.updateNavigation();
+                }*/
                 var message = {"command":"geo", "data": {"lat": data.coords.latitude, "lng": data.coords.longitude}};
                 this.sendMessage(JSON.stringify(message));
             }
@@ -400,14 +403,17 @@ export class CivilianPartPage {
         var areasToAvoid: String;
         areasToAvoid = "";
         if(testing) {
-            informations.areaToAvoid = [];
+            informations.areaToAvoid = [{"boundary":[-33.4026957798 , 150.611396303,-33.729730422 , 150.403283349], "risk": 2}];
+            informations.displayPoly = [{"points": [-33.729730422 , 150.498776696,-33.6987766957 , 150.470269578,-33.5173359029 , 150.403283349,-33.458486711 , 150.420595168,-33.4299795932 , 150.451548894,-33.4026957798 , 150.512233043,-33.4348728103 , 150.570470582,-33.4658265366 , 150.5989777,-33.5258990328 , 150.611396303,-33.7012233043 , 150.529730422,-33.729730422 , 150.498776696], "risk":0}, {"points": [-33.7148658089 , 150.499388323,-33.6993883233 , 150.485134191,-33.608664278 , 150.451639729,-33.5792384985 , 150.460295987,-33.5649843663 , 150.475773473,-33.5513419109 , 150.506116767,-33.5674310733 , 150.535236708,-33.5829085589 , 150.549490841,-33.6129460151 , 150.555700392,-33.7006116767 , 150.514865809,-33.7148658089 , 150.499388323], "risk":1}, {"points":[-33.7074330511 , 150.499694156,    -33.6996941556 , 150.492566949,    -33.6543312379 , 150.475819388,    -33.6396180579 , 150.480147602,    -33.6324908512 , 150.487886497,    -33.6256694889 ,150.503058444,    -33.6337142288 , 150.517618702,    -33.6414531243 , 150.524745909,    -33.6564721487 , 150.527850745,-33.7003058444 , 150.507433051,-33.7074330511 , 150.499694156], "risk": 2}];
+
+            /*informations.areaToAvoid = [];
             informations.displayPoly = [];
             for(let i = 0; i < 3; i++) {
                 var list = [(-33.87 + Math.random()* 0.05 / (i+1)), (151 - Math.random() * 0.01 / (i+1)), (-33.87 - Math.random() * 0.01 / (i+1)), (151 + Math.random() * 0.01 / (i+1))];
                 informations.areaToAvoid.push({"boundary": list, "risk": i});
                 informations.displayPoly.push({"points": [list[0], list[1], list[0], list[3], list[2], list[3], list[2], list[1]], "risk": i});
-            }
-            informations.safeZones = [{"radius": 200, "point": [-33.5, 150.5]}];
+            }*/
+            informations.safeZones = [{"radius": 200, "point": [-33.614637, 150.782362]}];
         }
         //console.log(informations);
         for(var i = 0; i < 3; i++) {
@@ -426,24 +432,13 @@ export class CivilianPartPage {
             this.map.addGoogleMarker(new H.geo.Point(safeZone.point[0], safeZone.point[1]),
                 '<span>Hi, here is a safe zone =)</span>');
             //this.map.addSimpleMarker({"lat": safeZone.point[0], "lng": safeZone.point[1]}, "http://25.media.tumblr.com/d9e668fac828170fd3043f063f3fc4c4/tumblr_mm9n3sdycy1ry1y7qo5_500.gif");
-            this.map.addMarker({"lat": safeZone.point[0], "lng": safeZone.point[1]}, "<span>coucou</span>");
-            this.map.addObject(new H.map.Marker({"lat": safeZone.point[0], "lng": safeZone.point[1]}));
+            //this.map.addMarker({"lat": safeZone.point[0], "lng": safeZone.point[1]}, "<span>coucou</span>");
+            //this.map.addObject(new H.map.Marker({"lat": safeZone.point[0], "lng": safeZone.point[1]}));
         });
 
-        var liste = [
-            -33.6951609555 , 150.495160956,
-            -33.6951609555 , 150.504839044,
-            -33.7120976112 , 150.545970922,
-            -33.7241952223 , 150.553229489,
-            -33.7338733112 , 150.553229489,
-            -33.7483904446 , 150.548390445,
-            -33.7532294891 , 150.533873311,
-            -33.7532294891 , 150.524195222,
-            -33.7459709224 , 150.512097611,
-            -33.7048390445 , 150.495160956,
-            -33.6951609555 , 150.495160956];
-        this.map.addPolygonFromList(liste, colors[2] + "BB");
-        this.map.addPolygonFromList([-33.6951609555, 150.553229489, -33.6951609555 ,150.495160956, -33.7532294891, 150.495160956,-33.7532294891, 150.553229489], "#00000000", 2, "#000");
+        /*var liste_red = [-33.7074330511 , 150.499694156,    -33.6996941556 , 150.492566949,    -33.6543312379 , 150.475819388,    -33.6396180579 , 150.480147602,    -33.6324908512 , 150.487886497,    -33.6256694889 ,150.503058444,    -33.6337142288 , 150.517618702,    -33.6414531243 , 150.524745909,    -33.6564721487 , 150.527850745,-33.7003058444 , 150.507433051,-33.7074330511 , 150.499694156];
+        this.map.addPolygonFromList(liste_red, colors[2] + "BB");
+        this.map.addPolygonFromList([-33.6951609555, 150.553229489, -33.6951609555 ,150.495160956, -33.7532294891, 150.495160956,-33.7532294891, 150.553229489], "#00000000", 2, "#000");*/
 
         this.map.fitToBounds();
         //this.map.setCenter({"lat":-33.6527334665 , "lng": 150.530349492});
