@@ -170,6 +170,22 @@ export class CivilianPartPage {
                   strokeColor: color
                 }
             });
+            //polyline.addEventListener("click", () =>{map.routeShape = polyline; console.log("polyline clicked");this.beginNavigation(true);});
+            /*var group = new H.map.Group();
+
+            this.addObject(group);*/
+
+            // add 'tap' event listener, that opens info bubble, to the group
+            polyline.addEventListener('pointerenter', function (evt) {
+              // event target is the marker itself, group is a parent event target
+              // for all objects that it contains
+              map.routeShape = this;
+
+              console.log("group hovered");
+              console.log(this);
+            }, false);
+
+            //group.addObject(polyline);
             // Add the polyline to the map
             this.addGeoShape(polyline);
         }
