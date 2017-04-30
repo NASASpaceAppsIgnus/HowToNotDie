@@ -24,6 +24,7 @@ class Processor:
         client = ActiveClients.FindClient(clientID)
         outputData = {Alerts.DANGER_LEVEL:client[Alerts.DANGER_LEVEL]}
         Areas.Load(client[ActiveClients.POSITION], outputData)
+        print("output %s"%outputData)
         return outputData
         
     def EnumAlertsCallback(clientID, dangerLevel):

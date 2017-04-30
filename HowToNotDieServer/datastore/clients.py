@@ -12,7 +12,7 @@ class ActiveClients:
     
     def Connect(clientID, reply_channel):
         try:        
-            GetDB().ActiveClients.insert_one({"clientID":clientID})
+            GetDB().ActiveClients.insert_one({"clientID":clientID, "notified":0})
             ActiveClients._responseChannels[clientID] = reply_channel
         except Exception as e:
             print("Failed to connect client: %s, error: %s" % (clientID, e))            
