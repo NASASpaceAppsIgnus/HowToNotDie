@@ -7,6 +7,9 @@ import { ItemDetailsPage } from '../item-details/item-details';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
 import { BackgroundMode } from '@ionic-native/background-mode';
 import { Geolocation } from '@ionic-native/geolocation';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+
+import { Platform } from 'ionic-angular';
 
 declare var H: any;
 
@@ -45,7 +48,7 @@ export class CivilianPartPage {
         );
     }
 
-    constructor(public navCtrl: NavController, private elRef: ElementRef, private backgroundMode: BackgroundMode, private geolocation: Geolocation, public navParams: NavParams) {
+    constructor(public navCtrl: NavController, private elRef: ElementRef, private backgroundMode: BackgroundMode, private geolocation: Geolocation, public navParams: NavParams, private localNotifications: LocalNotifications, public plt: Platform) {
         console.log("arrived on civilian-part");
 
         H.geo.Rect.prototype.getBoundingPoints = function() {
@@ -230,10 +233,9 @@ export class CivilianPartPage {
             this.addObject(marker);
         }
 
-        H.Map.prototype.addGoogleMarker = function(point, content, app) {
+        H.Map.prototype.addGoogleMarker = function(point, content) {
             this.addMarker(point,
                 '<div style="position: initial;"><div style="display: inline-block; min-width: 100px; position: absolute; transform: translate(-50%, -100%) translate(0px, -30px); overflow: auto; max-height: 337px; max-width: 500px;background-color: white;border-radius: 5px;box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.6);"><ol style="padding: 5px;margin: auto; border-radius: 5px;"><div>' + content + '</div></ol></div><div style="position: absolute; overflow: hidden; width: 16px; height: 30px;transform: translate(-60%, -100%);"><div style="position: absolute; background-color: rgb(255, 255, 255); transform: skewX(22.6deg); transform-origin: 0px 0px 0px; height: 24px; width: 10px; box-shadow: 0px 1px 0px inherit 6px rgba(0, 0, 0, 0.6);z-index: 1;"></div></div><div style="position: absolute; overflow: hidden; width: 16px; height: 30px;z-index: 1;transform: translate(5%, -100%);"><div style="background-color: rgb(255, 255, 255); transform: skewX(-22.6deg); transform-origin: 10px 0px 0px; height: 24px; width: 10px;"></div></div></div>');
-            app.placeMarkers();
         }
 
         /* websocket communication */
@@ -285,6 +287,24 @@ export class CivilianPartPage {
                 //this.sendMessage(data);
             }
         });
+
+        this.localNotifications.on("click", (notification) => {this.localNotifications.cancel(notification.id);});
+    }
+
+    sendNotification(title, text, sound, icon) {
+        this.id++;
+        var notification = {
+            id: this.id,
+            text: text,
+            title: title,
+            every: "week",
+            sound: sound
+        };
+        if(this.plt.is('android')) {
+            notification["LED"] = "#F00";
+            notification["icon"] = icon;
+        }
+        this.localNotifications.schedule(notification);
     }
 
     error(error) {
@@ -382,7 +402,7 @@ export class CivilianPartPage {
 
         informations.safeZones.forEach((safeZone, index)=>{
             this.map.addGoogleMarker(new H.geo.Point(safeZone.point[0], safeZone.point[1]),
-                '<span>Hi, here is a safe zone =)</span>', this);
+                '<span>Hi, here is a safe zone =)</span>');
             //this.map.addSimpleMarker({"lat": safeZone.point[0], "lng": safeZone.point[1]}, "http://25.media.tumblr.com/d9e668fac828170fd3043f063f3fc4c4/tumblr_mm9n3sdycy1ry1y7qo5_500.gif");
             this.map.addMarker({"lat": safeZone.point[0], "lng": safeZone.point[1]}, "<span>coucou</span>");
             this.map.addObject(new H.map.Marker({"lat": safeZone.point[0], "lng": safeZone.point[1]}));
@@ -426,6 +446,9 @@ export class CivilianPartPage {
             }
             if (this.danger && this.run) {
                 setTimeout(() => {this.displayMap(response.data);}, 1);
+            }
+            if (this.danger) {
+                this.sendNotification("FIRE !", this.run ? "You probably need to escape, follow instructions !" : "Find a safe place, fire is coming !", "res://alert.mp3", "res://fire");
             }
         }
     }
