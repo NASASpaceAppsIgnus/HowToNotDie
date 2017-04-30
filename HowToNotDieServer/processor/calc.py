@@ -51,11 +51,7 @@ def getfirefront(lat,lon,distance,bearing):
     return lat2, lon2
 
 def printa(grid): # A print function for 2D arrays
-    for i in grid:
-        for j in i:
-            print j,
-        print "\n"
-
+    pass
 
 def mult(grid, C=1):  # multiplies every element in the 2D array by C
     out = grid
@@ -113,7 +109,6 @@ def fire_constructor(HoursSinceCollection,ignitionlatitude,ignitionlongitude,win
     rate,flame,spot = fire_rate_of_spread(windspd,temp,humidity)
     
     distance = rate*HoursSinceCollection
-    print distance
     lat2,lon2 = getfirefront(ignitionlatitude,ignitionlongitude,distance,theta)
     
     firefront = [lat2,lon2]
