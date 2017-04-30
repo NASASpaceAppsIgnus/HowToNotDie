@@ -24,7 +24,7 @@
       </ion-navbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content text-center>
         <button ion-button full (click)="turnDangerOnOff()">Turn danger <span *ngIf="danger"> off</span><span *ngIf="!danger">on</span></button>
         <button ion-button full (click)="turnRunOnOff()">Turn run <span *ngIf="run"> off</span><span *ngIf="!run"> on</span></button>
         <!--<button ion-button full (click)="reportFire()">Report a fire</button>-->
@@ -35,9 +35,9 @@
         </div>
         <div [style.display]="danger ? 'block' : 'none'">
             <!--<button ion-button full (click)="alertRescueTeam()" color="danger" >HELP ME</button>-->
-            <div id="map" [style.display]="run ? 'block' : 'none'" [style.height]="getAvailableHeight()" style="width: 100%; min-heigth: 100px;">
+            <div id="map" [style.display]="run ? 'block' : 'none'" style="height:500px; width: 100%; min-heigth: 100px;"><!--[style.height]=getAvailableHeight()-->
             </div>
-            <p *ngIf="!run">Stay there, relevant information can be found <a href="myawesomewebsite.com.au">here</a></p>
+            <p *ngIf="!run" style="font-size: 22px;">Fire imminent. Prepare for impact.</p>
         </div>
     </ion-content>
 </ion-content>

@@ -1,18 +1,27 @@
 <ion-content padding>
+    <ion-header>
+      <ion-navbar>
+        <button ion-button menuToggle>
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Welcome !</ion-title>
+      </ion-navbar>
+    </ion-header>
 
-  <h3>Welcome to our awesome app !</h3>
 
+<div style="text-align-justify; font-size: 30px;">
   <p>
-    This app will help you survive fire.
+    This app should help you survive fire.
   </p>
   <p>
-    Please tell us if you're a future potential casualty or a future potential casualty with limited mobility ;)
+    Please tell us if you have reduced mobility.
   </p>
   <p>
-    <button ion-button color="secondary" full (click)="openCivilianPart($event, true)">Future potential casualty</button>
+    <button ion-button full color="secondary" round (click)="openCivilianPart($event, true)"><span>I can escape alone</span></button>
   </p>
   <p>
-    <button ion-button color="danger" full (click)="openCivilianPart($event, false)">Future potential casualty with limited mobility</button>
+    <button ion-button full color="danger" round (click)="openCivilianPart($event, false)"><span>Escaping will be difficult</span></button>
   </p>
+</div>
 
 </ion-content>

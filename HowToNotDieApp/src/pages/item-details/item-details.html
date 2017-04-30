@@ -12,9 +12,8 @@
     {{selectedItem.title}}
   </h3>
   <div style="text-align: center;">
-      <img [src]="selectedItem.image"/>
+      <img [src]="selectedItem.image" *ngIf="selectedItem.image"/>
   </div>
-  <h4 text-center *ngIf="selectedItem">
-    {{selectedItem.text}}
+  <h4 text-left style="margin: 10px;" *ngIf="selectedItem" [innerHTML]="selectedItem.text">
   </h4>
 </ion-content>
