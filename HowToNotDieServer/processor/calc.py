@@ -107,29 +107,30 @@ def createAvoid(fire): # creates the avoidance rectangle
     return points
 
 
-def fire_constructor(time,ignitionlat,ignitionlon,windspd,theta = 2,temp=30,humidity=0.3):
+def fire_constructor(HoursSinceCollection,ignitionlatitude,ignitionlongitude,windspd,bearing = 135,temp=30,humidity=0.3):
+    theta = math.radians(bearing)
     theta = np.pi/2 - theta#making 0 to the North.
     rate,flame,spot = fire_rate_of_spread(windspd,temp,humidity)
     
-    distance = rate*time
+    distance = rate*HoursSinceCollection
     print distance
-    lat2,lon2 = getfirefront(ignitionlat,ignitionlon,distance,theta)
+    lat2,lon2 = getfirefront(ignitionlatitude,ignitionlongitude,distance,theta)
     
     firefront = [lat2,lon2]
-    origin = [ignitionlat,ignitionlon]
+    origin = [ignitionlatitude,ignitionlongitude]
     
     fire = shapefire(origin,firefront,theta)
 
     AvoidPoints = createAvoid(fire)
     return AvoidPoints, fire
     
-lon = 150.5
-lat = -33.7
-rad = math.radians(135)
-speed = 60
-
+#lon = 150.5
+#lat = -33.7
+#rad = math.radians(135)
+#speed = 60
+#
 #avoid, fire =  fire_constructor(2,lat,lon,speed,rad,40,0.5)
-
+#
 #print '--boundary--'
 #for i in fire:
 #    print i[0],',',i[1]
